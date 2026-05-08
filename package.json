@@ -1,0 +1,24 @@
+{
+  "name": "swg-sign-designer",
+  "version": "1.0.0",
+  "description": "SWG House Sign Designer",
+  "main": "main.js",
+
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder"
+  },
+
+  "devDependencies": {
+    "electron": "^30.0.0",
+    "electron-builder": "^26.8.1"
+  },
+
+  "build": {
+    "appId": "com.swg.signdesigner",
+
+    "win": {
+      "target": "portable"
+    }
+  }
+}

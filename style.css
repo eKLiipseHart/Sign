@@ -1,0 +1,231 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
+
+body {
+    margin: 0;
+    background: #0d0d0d;
+    color: white;
+    font-family: 'Orbitron', sans-serif;
+    overflow: hidden;
+}
+
+.container {
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.left-panel {
+    width: 40%;
+    padding: 20px;
+    border-right: 1px solid #333;
+    background: #111;
+    box-sizing: border-box;
+    overflow-y: auto;
+    overflow-x: hidden;
+    height: 100vh;
+}
+
+.right-panel {
+    flex: 1;
+    padding: 20px;
+    background: #0a0a0a;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.titleBar {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.appLogo {
+    width: 64px;
+    height: 64px;
+    object-fit: contain;
+}
+
+h1, h2 {
+    color: #00ffff;
+    margin: 0;
+}
+
+label {
+    display: block;
+    margin-bottom: 8px;
+    margin-top: 12px;
+    color: #cccccc;
+    font-size: 14px;
+}
+
+textarea {
+    width: 100%;
+    height: 220px;
+    background: #151515;
+    color: white;
+    border: 1px solid #444;
+    padding: 12px;
+    font-size: 15px;
+    resize: none;
+    margin-bottom: 10px;
+    box-sizing: border-box;
+    border-radius: 6px;
+    font-family: monospace;
+}
+
+select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    background: #151515;
+    color: white;
+    border: 1px solid #444;
+    border-radius: 6px;
+    box-sizing: border-box;
+}
+
+.counter {
+    margin-bottom: 15px;
+    color: #999;
+    font-size: 14px;
+}
+
+.colors {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
+}
+
+.colorBtn {
+    width: 36px;
+    height: 36px;
+    border: 2px solid #333;
+    cursor: pointer;
+    border-radius: 6px;
+}
+
+.colorBtn:hover {
+    transform: scale(1.05);
+}
+
+/* ❌ REMOVED factionPalette + paletteColor styles */
+
+.colorPickerArea {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
+    margin-bottom: 15px;
+}
+
+#colorWheel {
+    width: 55px;
+    height: 55px;
+    border: none;
+    background: none;
+    cursor: pointer;
+}
+
+#hexInput {
+    width: 120px;
+    padding: 10px;
+    background: #151515;
+    color: white;
+    border: 1px solid #444;
+    border-radius: 6px;
+    font-family: monospace;
+    box-sizing: border-box;
+}
+
+.gradientArea {
+    margin-top: 10px;
+    margin-bottom: 15px;
+}
+
+.gradientArea input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    background: #151515;
+    color: white;
+    border: 1px solid #444;
+    border-radius: 6px;
+    box-sizing: border-box;
+}
+
+.gradientColors {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.gradientColors input[type="color"] {
+    width: 60px;
+    height: 40px;
+    border: none;
+    background: none;
+    cursor: pointer;
+}
+
+.symbolBar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 10px;
+    margin-bottom: 15px;
+}
+
+.symbolBtn {
+    padding: 8px 10px;
+    background: #1a1a1a;
+    color: #00ffff;
+    border: 1px solid #444;
+    cursor: pointer;
+    border-radius: 6px;
+    min-width: 52px;
+    font-size: 13px;
+}
+
+.symbolBtn:hover {
+    border-color: #00ffff;
+    background: #222;
+}
+
+.buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+button {
+    padding: 9px 14px;
+    background: #222;
+    color: white;
+    border: 1px solid #555;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: 0.15s;
+}
+
+button:hover {
+    background: #333;
+    border-color: #00ffff;
+}
+
+#preview {
+    background: #000;
+    border: 2px solid #00ffff;
+    padding: 25px;
+    height: calc(100vh - 120px);
+    white-space: pre-wrap;
+    font-size: 24px;
+    line-height: 1.6;
+    border-radius: 10px;
+    letter-spacing: 1px;
+    overflow: hidden;
+    box-sizing: border-box;
+    word-break: break-word;
+}

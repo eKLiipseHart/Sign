@@ -8,7 +8,6 @@ const insertCustomColor = document.getElementById('insertCustomColor');
 const gradientText = document.getElementById('gradientText');
 const gradientStart = document.getElementById('gradientStart');
 const gradientEnd = document.getElementById('gradientEnd');
-
 const stylePacks = {
     imperial: {
         templates: [

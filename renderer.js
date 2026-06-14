@@ -23,16 +23,18 @@ function renderPreview() {
 
     let html = text;
 
-    // FINAL FIX: remove \# and # from preview, colorize content only
-   html = html.replace(
-    /(\\)?#([0-9A-Fa-f]{6})(.*?)(?=(\\)?#[0-9A-Fa-f]{6}|$)/gs,
-    (match, slash, color, content) => {
-        return `<span style="color:#${color}">${content}</span>`;
-    }
-);
+    // Works with "#RRGGBB" and "\#RRGGBB"
+    // Hides the slash + # + hex, shows only colored content
+    html = html.replace(
+        /\\?#([0-9A-Fa-f]{6})(.*?)(?=\\?#([0-9A-Fa-f]{6})|$)/gs,
+        (match, color, content) => {
+            return `<span style="color:#${color}">${content}</span>`;
+        }
+    );
 
     preview.innerHTML = html.replace(/\n/g, '<br>');
 }
+
 
 function insertAtCursor(field, text) {
     const start = field.selectionStart;

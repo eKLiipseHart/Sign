@@ -90,12 +90,11 @@ function renderPreview() {
 
     // Supports both "#RRGGBB" and "\#RRGGBB"
     html = html.replace(
-        /(\\)?#([0-9A-Fa-f]{6})(.*?)(?=(\\)?#[0-9A-Fa-f]{6}|$)/gs,
-        (match, slash, color, content) => {
-            const visiblePrefix = slash ? "\\#" : "";
-            return `${visiblePrefix}<span style="color:#${color}">${content}</span>`;
-        }
-    );
+    /(\\)?#([0-9A-Fa-f]{6})(.*?)(?=(\\)?#[0-9A-Fa-f]{6}|$)/gs,
+    (match, slash, color, content) => {
+        return `<span style="color:#${color}">${content}</span>`;
+    }
+);
 
     preview.innerHTML = html.replace(/\n/g, '<br>');
 }

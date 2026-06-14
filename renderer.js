@@ -71,6 +71,103 @@ const stylePacks = {
 };
 
 /* ============================================================
+   RANDOM THEMES (ESCAPED)
+   ============================================================ */
+
+const randomThemes = [
+    {
+        name: "Imperial",
+        templates: [
+`\\#FF0000=== Imperial Notice ===
+\\#CC0000Authorized Personnel Only
+\\#880000Report Suspicious Activity`,
+
+`\\#FF0000+++ EMPIRE NETWORK +++
+\\#FFFFFFSector Patrol Active
+\\#AA0000Glory to the Empire`
+        ]
+    },
+
+    {
+        name: "Rebel Alliance",
+        templates: [
+`\\#00CCFF=== Alliance Outpost ===
+\\#FFFFFFEncrypted Channel Active
+\\#00FFFFHope Lives`,
+
+`\\#00CCFF>>> REBEL NETWORK <<<
+\\#FFFFFFSupply Drop Incoming
+\\#00FFFFStand Together`
+        ]
+    },
+
+    {
+        name: "Hutt Cartel",
+        templates: [
+`\\#66FF00Jabba's Exchange
+\\#FFFF00Spice & Rare Goods
+\\#00FF00No Questions Asked`,
+
+`\\#99FF00Hutt Territory
+\\#FFFF00Pay Your Tribute
+\\#55AA00Trespassers Vanish`
+        ]
+    },
+
+    {
+        name: "Mandalorian",
+        templates: [
+`\\#FFAA00>>> Mandalorian Forge <<<
+\\#FFFFFFThis Is The Way
+\\#FFAA00Clan Honor Above All`,
+
+`\\#FFAA00=== Mandalorian Outpost ===
+\\#FFFFFFBeskar Trade Authorized
+\\#FFAA00No Droids Allowed`
+        ]
+    },
+
+    {
+        name: "Sith",
+        templates: [
+`\\#FF0000+++ SITH SANCTUM +++
+\\#AA0000Power Through Passion
+\\#550000Fear Is Freedom`,
+
+`\\#FF0000=== DARK SIDE ARCHIVE ===
+\\#AA0000Knowledge Is Power
+\\#550000Obey the Sith`
+        ]
+    },
+
+    {
+        name: "Jedi",
+        templates: [
+`\\#00FFFF=== JEDI ENCLAVE ===
+\\#FFFFFFPeace Through Knowledge
+\\#00CCFFThe Force Guides Us`,
+
+`\\#00FFFF>>> JEDI ARCHIVE <<<
+\\#FFFFFFMeditation Chamber Active
+\\#00CCFFBalance Above All`
+        ]
+    },
+
+    {
+        name: "Cantina",
+        templates: [
+`\\#FF00FF+++ Mos Eisley Cantina +++
+\\#00FFFFLive Music Tonight
+\\#FFFFFFNo Blasters`,
+
+`\\#FF00FF=== OUTER RIM CANTINA ===
+\\#00FFFFDrinks & Sabacc
+\\#FFFFFFSmugglers Welcome`
+        ]
+    }
+];
+
+/* ============================================================
    SANITIZE + PREVIEW RENDERER (FINAL FIX)
    ============================================================ */
 
@@ -88,7 +185,7 @@ function renderPreview() {
 
     let html = text;
 
-    // FINAL: supports # and \#, hides both slash + hex in preview
+    // Supports # and \#, hides both slash + hex in preview
     html = html.replace(
         /\\?#([0-9A-Fa-f]{6})(.*?)(?=\\?#([0-9A-Fa-f]{6})|$)/gs,
         (match, color, content) => {

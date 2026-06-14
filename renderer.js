@@ -24,12 +24,12 @@ function renderPreview() {
     let html = text;
 
     // FINAL FIX: remove \# and # from preview, colorize content only
-    html = html.replace(
-        /(\\)?#([0-9A-Fa-f]{6})(.*?)(?=(\\)?#[0-9A-Fa-f]{6}|$)/gs,
-        (match, slash, color, content) => {
-            return `<span style="color:#${color}">${content}</span>`;
-        }
-    );
+   html = html.replace(
+    /(\\)?#([0-9A-Fa-f]{6})(.*?)(?=(\\)?#[0-9A-Fa-f]{6}|$)/gs,
+    (match, slash, color, content) => {
+        return `<span style="color:#${color}">${content}</span>`;
+    }
+);
 
     preview.innerHTML = html.replace(/\n/g, '<br>');
 }

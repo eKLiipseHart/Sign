@@ -9,6 +9,71 @@ const gradientText = document.getElementById('gradientText');
 const gradientStart = document.getElementById('gradientStart');
 const gradientEnd = document.getElementById('gradientEnd');
 
+/* ============================================================
+   STYLE PACKS (ESCAPED FOR SWG)
+   ============================================================ */
+
+const stylePacks = {
+    imperial: {
+        templates: [
+`\\#FF0000====================
+\\#CC0000Imperial Checkpoint
+\\#880000Authorized Personnel
+\\#550000====================`,
+`\\#FF0000+++ EMPIRE NETWORK +++
+\\#FFFFFFSecurity Level Alpha
+\\#AA0000Unauthorized Access Forbidden`
+        ]
+    },
+
+    cyberpunk: {
+        templates: [
+`\\#00FFFF/// Neon District ///
+\\#FF00FF+++ Open All Night +++
+\\#FFFF00=== Vendors Active ===`,
+`\\#00FFFF>>> CYBERNET LIVE <<<
+\\#FF00FFDigital Bazaar
+\\#FFFFFFSlicers Welcome`
+        ]
+    },
+
+    hutt: {
+        templates: [
+`\\#66FF00Jabba Exchange
+\\#FFFF00Rare Goods & Spice
+\\#00FF00No Questions Asked`
+        ]
+    },
+
+    rebel: {
+        templates: [
+`\\#00CCFF=== Alliance Network ===
+\\#FFFFFFEncrypted Communications
+\\#00FFFFFor Freedom`
+        ]
+    },
+
+    corporate: {
+        templates: [
+`\\#00CCFF>>>> GALACTIC FINANCE <<<<
+\\#FFFFFFUpper Coruscant Division
+\\#00FFFFInvestment & Trade`
+        ]
+    },
+
+    nightclub: {
+        templates: [
+`\\#FF00FF+++ Galaxy Pulse +++
+\\#00FFFFLive DJ Tonight
+\\#FFFFFFVIP Lounge Upstairs`
+        ]
+    }
+};
+
+/* ============================================================
+   SANITIZE + PREVIEW RENDERER (FINAL FIX)
+   ============================================================ */
+
 function sanitizeText(text) {
     text = text.replace(/[^\x20-\x7E\n]/g, '');
     if (text.length > 256)
@@ -23,8 +88,7 @@ function renderPreview() {
 
     let html = text;
 
-    // Works with "#RRGGBB" and "\#RRGGBB"
-    // Hides the slash + # + hex, shows only colored content
+    // FINAL: supports # and \#, hides both slash + hex in preview
     html = html.replace(
         /\\?#([0-9A-Fa-f]{6})(.*?)(?=\\?#([0-9A-Fa-f]{6})|$)/gs,
         (match, color, content) => {
@@ -35,6 +99,9 @@ function renderPreview() {
     preview.innerHTML = html.replace(/\n/g, '<br>');
 }
 
+/* ============================================================
+   INSERT HELPERS
+   ============================================================ */
 
 function insertAtCursor(field, text) {
     const start = field.selectionStart;
@@ -51,6 +118,10 @@ function insertAtCursor(field, text) {
 
     field.focus();
 }
+
+/* ============================================================
+   COLOR UTILITIES
+   ============================================================ */
 
 function hexToRgb(hex) {
     const bigint = parseInt(hex.slice(1), 16);
@@ -71,7 +142,10 @@ function rgbToHex(r, g, b) {
         .join('');
 }
 
-// FINAL FIX: gradient outputs \#RRGGBB
+/* ============================================================
+   GRADIENT GENERATOR (ESCAPED)
+   ============================================================ */
+
 function generateLetterGradient(text, startHex, endHex) {
     const start = hexToRgb(startHex);
     const end = hexToRgb(endHex);
@@ -92,9 +166,13 @@ function generateLetterGradient(text, startHex, endHex) {
     return result;
 }
 
+/* ============================================================
+   EVENT LISTENERS
+   ============================================================ */
+
 editor.addEventListener('input', renderPreview);
 
-// COLOR BUTTONS — now escaped
+/* COLOR BUTTONS — ESCAPED */
 document.querySelectorAll('.colorBtn').forEach(btn => {
     btn.addEventListener('click', () => {
         insertAtCursor(editor, "\\" + btn.dataset.color.toUpperCase());
@@ -102,7 +180,7 @@ document.querySelectorAll('.colorBtn').forEach(btn => {
     });
 });
 
-// SYMBOL BUTTONS
+/* SYMBOL BUTTONS */
 document.querySelectorAll('.symbolBtn').forEach(btn => {
     btn.addEventListener('click', () => {
         insertAtCursor(editor, btn.innerText);
@@ -110,7 +188,7 @@ document.querySelectorAll('.symbolBtn').forEach(btn => {
     });
 });
 
-// STYLE PACKS — unchanged (your templates already escaped)
+/* STYLE PACK SELECT */
 stylePackSelect.addEventListener('change', () => {
     const selected = stylePacks[stylePackSelect.value];
     if (!selected) return;
@@ -124,7 +202,7 @@ stylePackSelect.addEventListener('change', () => {
     renderPreview();
 });
 
-// CUSTOM COLOR PICKER — escaped
+/* CUSTOM COLOR PICKER — ESCAPED */
 colorWheel.addEventListener('input', () => {
     hexInput.value = colorWheel.value;
 });
@@ -150,7 +228,7 @@ insertCustomColor.addEventListener('click', () => {
     renderPreview();
 });
 
-// GRADIENT BUTTON
+/* GRADIENT BUTTON */
 document.getElementById('generateLetterGradient')
 .addEventListener('click', () => {
     const text = gradientText.value.trim();
@@ -166,14 +244,14 @@ document.getElementById('generateLetterGradient')
     renderPreview();
 });
 
-// FINAL FIX: DIVIDER — escaped
+/* DIVIDER — ESCAPED */
 document.getElementById('dividerBtn')
 .addEventListener('click', () => {
     insertAtCursor(editor, '\n\\#FFFF00====================\n');
     renderPreview();
 });
 
-// FINAL FIX: BORDER — escaped
+/* BORDER — ESCAPED */
 document.getElementById('borderBtn')
 .addEventListener('click', () => {
     const borders = [
@@ -196,14 +274,14 @@ document.getElementById('borderBtn')
     renderPreview();
 });
 
-// COPY BUTTON
+/* COPY BUTTON */
 document.getElementById('copyBtn')
 .addEventListener('click', async () => {
     await navigator.clipboard.writeText(editor.value);
     alert('Copied for SWG!');
 });
 
-// RANDOM THEMES — unchanged (your templates already escaped)
+/* RANDOM THEMES — ESCAPED */
 document.getElementById('randomBtn')
 .addEventListener('click', () => {
     const theme =

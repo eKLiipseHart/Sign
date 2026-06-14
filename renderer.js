@@ -90,3 +90,298 @@ function renderPreview() {
 
     // Updated regex to support:
     // #RRGGBB
+    // \#RRGGBB
+    html = html.replace(
+        /\\?#([0-9A-Fa-f]{6})(.*?)(?=\\?#([0-9A-Fa-f]{6})|$)/gs,
+        (match, color, content) => {
+            return `<span style="color:#${color}">${content}</span>`;
+        }
+    );
+
+    preview.innerHTML = html.replace(/\n/g, '<br>');
+}
+
+/* ============================================================
+   INSERT HELPERS
+   ============================================================ */
+
+function insertAtCursor(field, text) {
+    const start = field.selectionStart;
+    const end = field.selectionEnd;
+
+    field.value =
+        field.value.substring(0, start) +
+        text +
+        field.value.substring(end);
+
+    field.selectionStart =
+        field.selectionEnd =
+        start + text.length;
+
+    field.focus();
+}
+
+/* ============================================================
+   COLOR UTILITIES
+   ============================================================ */
+
+function hexToRgb(hex) {
+    const bigint = parseInt(hex.slice(1), 16);
+    return {
+        r: (bigint >> 16) & 255,
+        g: (bigint >> 8) & 255,
+        b: bigint & 255
+    };
+}
+
+function rgbToHex(r, g, b) {
+    return "#" +
+        [r, g, b]
+        .map(x => {
+            const hex = x.toString(16);
+            return hex.length === 1 ? '0' + hex : hex;
+        })
+        .join('');
+}
+
+/* ============================================================
+   GRADIENT GENERATOR (UPDATED TO ESCAPED FORMAT)
+   ============================================================ */
+
+function generateLetterGradient(text, startHex, endHex) {
+    const start = hexToRgb(startHex);
+    const end = hexToRgb(endHex);
+    let result = '';
+
+    for (let i = 0; i < text.length; i++) {
+        const ratio = i / Math.max(text.length - 1, 1);
+
+        const r = Math.round(start.r + (end.r - start.r) * ratio);
+        const g = Math.round(start.g + (end.g - start.g) * ratio);
+        const b = Math.round(start.b + (end.b - start.b) * ratio);
+
+        const hex = rgbToHex(r, g, b).toUpperCase();
+
+        result += `\\${hex}${text[i]}`;
+    }
+
+    return result;
+}
+
+/* ============================================================
+   EVENT LISTENERS
+   ============================================================ */
+
+editor.addEventListener('input', renderPreview);
+
+document.querySelectorAll('.colorBtn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        insertAtCursor(editor, "\\" + btn.dataset.color.toUpperCase());
+        renderPreview();
+    });
+});
+
+document.querySelectorAll('.symbolBtn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        insertAtCursor(editor, btn.innerText);
+        renderPreview();
+    });
+});
+
+stylePackSelect.addEventListener('change', () => {
+    const selected = stylePacks[stylePackSelect.value];
+    if (!selected) return;
+
+    const randomTemplate =
+        selected.templates[
+            Math.floor(Math.random() * selected.templates.length)
+        ];
+
+    editor.value = randomTemplate;
+    renderPreview();
+});
+
+colorWheel.addEventListener('input', () => {
+    hexInput.value = colorWheel.value;
+});
+
+hexInput.addEventListener('input', () => {
+    if (/^#[0-9A-Fa-f]{6}$/.test(hexInput.value)) {
+        colorWheel.value = hexInput.value;
+    }
+});
+
+insertCustomColor.addEventListener('click', () => {
+    let value = hexInput.value.toUpperCase();
+
+    if (!value.startsWith('#'))
+        value = '#' + value;
+
+    if (!/^#[0-9A-Fa-f]{6}$/.test(value)) {
+        alert('Invalid hex color');
+        return;
+    }
+
+    insertAtCursor(editor, "\\" + value);
+    renderPreview();
+});
+
+document.getElementById('generateLetterGradient')
+.addEventListener('click', () => {
+    const text = gradientText.value.trim();
+    if (!text) return;
+
+    const output = generateLetterGradient(
+        text,
+        gradientStart.value,
+        gradientEnd.value
+    );
+
+    editor.value = output;
+    renderPreview();
+});
+
+document.getElementById('dividerBtn')
+.addEventListener('click', () => {
+    insertAtCursor(editor, '\n\\#FFFF00====================\n');
+    renderPreview();
+});
+
+document.getElementById('borderBtn')
+.addEventListener('click', () => {
+    const borders = [
+        "====================",
+        "++++++++++++++++++++",
+        "////////////////////",
+        "********************",
+        "~~~~~~~~~~~~~~~~~~~~",
+        ">>>>>>>>>>>>>>>>>>>>",
+        "<<<<<<<<<<<<<<<<<<<<",
+        "||||||||||||||||||||",
+        "####################",
+        "--------------------"
+    ];
+
+    const border =
+        borders[Math.floor(Math.random() * borders.length)];
+
+    insertAtCursor(editor, `\n\\#FFFF00${border}\n`);
+    renderPreview();
+});
+
+document.getElementById('copyBtn')
+.addEventListener('click', async () => {
+    await navigator.clipboard.writeText(editor.value);
+    alert('Copied for SWG!');
+});
+
+/* ============================================================
+   NEW STAR WARS RANDOM GENERATOR (UPDATED TO ESCAPED COLORS)
+   ============================================================ */
+
+const randomThemes = [
+    {
+        name: "Imperial",
+        templates: [
+`\\#FF0000=== Imperial Notice ===
+\\#CC0000Authorized Personnel Only
+\\#880000Report Suspicious Activity`,
+
+`\\#FF0000+++ EMPIRE NETWORK +++
+\\#FFFFFFSector Patrol Active
+\\#AA0000Glory to the Empire`
+        ]
+    },
+
+    {
+        name: "Rebel Alliance",
+        templates: [
+`\\#00CCFF=== Alliance Outpost ===
+\\#FFFFFFEncrypted Channel Active
+\\#00FFFFHope Lives`,
+
+`\\#00CCFF>>> REBEL NETWORK <<<
+\\#FFFFFFSupply Drop Incoming
+\\#00FFFFStand Together`
+        ]
+    },
+
+    {
+        name: "Hutt Cartel",
+        templates: [
+`\\#66FF00Jabba's Exchange
+\\#FFFF00Spice & Rare Goods
+\\#00FF00No Questions Asked`,
+
+`\\#99FF00Hutt Territory
+\\#FFFF00Pay Your Tribute
+\\#55AA00Trespassers Vanish`
+        ]
+    },
+
+    {
+        name: "Mandalorian",
+        templates: [
+`\\#FFAA00>>> Mandalorian Forge <<<
+\\#FFFFFFThis Is The Way
+\\#FFAA00Clan Honor Above All`,
+
+`\\#FFAA00=== Mandalorian Outpost ===
+\\#FFFFFFBeskar Trade Authorized
+\\#FFAA00No Droids Allowed`
+        ]
+    },
+
+    {
+        name: "Sith",
+        templates: [
+`\\#FF0000+++ SITH SANCTUM +++
+\\#AA0000Power Through Passion
+\\#550000Fear Is Freedom`,
+
+`\\#FF0000=== DARK SIDE ARCHIVE ===
+\\#AA0000Knowledge Is Power
+\\#550000Obey the Sith`
+        ]
+    },
+
+    {
+        name: "Jedi",
+        templates: [
+`\\#00FFFF=== JEDI ENCLAVE ===
+\\#FFFFFFPeace Through Knowledge
+\\#00CCFFThe Force Guides Us`,
+
+`\\#00FFFF>>> JEDI ARCHIVE <<<
+\\#FFFFFFMeditation Chamber Active
+\\#00CCFFBalance Above All`
+        ]
+    },
+
+    {
+        name: "Cantina",
+        templates: [
+`\\#FF00FF+++ Mos Eisley Cantina +++
+\\#00FFFFLive Music Tonight
+\\#FFFFFFNo Blasters`,
+
+`\\#FF00FF=== OUTER RIM CANTINA ===
+\\#00FFFFDrinks & Sabacc
+\\#FFFFFFSmugglers Welcome`
+        ]
+    }
+];
+
+document.getElementById('randomBtn')
+.addEventListener('click', () => {
+    const theme =
+        randomThemes[Math.floor(Math.random() * randomThemes.length)];
+
+    const template =
+        theme.templates[Math.floor(Math.random() * theme.templates.length)];
+
+    editor.value = template;
+    renderPreview();
+});
+
+renderPreview();

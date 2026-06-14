@@ -9,70 +9,62 @@ const gradientText = document.getElementById('gradientText');
 const gradientStart = document.getElementById('gradientStart');
 const gradientEnd = document.getElementById('gradientEnd');
 
-/* ============================================================
-   STYLE PACKS (UPDATED TO ESCAPED COLORS)
-   ============================================================ */
-
 const stylePacks = {
     imperial: {
         templates: [
-`\\#FF0000====================
-\\#CC0000Imperial Checkpoint
-\\#880000Authorized Personnel
-\\#550000====================`,
-`\\#FF0000+++ EMPIRE NETWORK +++
-\\#FFFFFFSecurity Level Alpha
-\\#AA0000Unauthorized Access Forbidden`
+`#ff0000====================
+#cc0000Imperial Checkpoint
+#880000Authorized Personnel
+#550000====================`,
+`#ff0000+++ EMPIRE NETWORK +++
+#ffffffSecurity Level Alpha
+#aa0000Unauthorized Access Forbidden`
         ]
     },
 
     cyberpunk: {
         templates: [
-`\\#00FFFF/// Neon District ///
-\\#FF00FF+++ Open All Night +++
-\\#FFFF00=== Vendors Active ===`,
-`\\#00FFFF>>> CYBERNET LIVE <<<
-\\#FF00FFDigital Bazaar
-\\#FFFFFFSlicers Welcome`
+`#00ffff/// Neon District ///
+#ff00ff+++ Open All Night +++
+#ffff00=== Vendors Active ===`,
+`#00ffff>>> CYBERNET LIVE <<<
+#ff00ffDigital Bazaar
+#ffffffSlicers Welcome`
         ]
     },
 
     hutt: {
         templates: [
-`\\#66FF00Jabba Exchange
-\\#FFFF00Rare Goods & Spice
-\\#00FF00No Questions Asked`
+`#66ff00Jabba Exchange
+#ffff00Rare Goods & Spice
+#00ff00No Questions Asked`
         ]
     },
 
     rebel: {
         templates: [
-`\\#00CCFF=== Alliance Network ===
-\\#FFFFFFEncrypted Communications
-\\#00FFFFFor Freedom`
+`#00ccff=== Alliance Network ===
+#ffffffEncrypted Communications
+#00ffffFor Freedom`
         ]
     },
 
     corporate: {
         templates: [
-`\\#00CCFF>>>> GALACTIC FINANCE <<<<
-\\#FFFFFFUpper Coruscant Division
-\\#00FFFFInvestment & Trade`
+`#00ccff>>>> GALACTIC FINANCE <<<<
+#ffffffUpper Coruscant Division
+#00ffffInvestment & Trade`
         ]
     },
 
     nightclub: {
         templates: [
-`\\#FF00FF+++ Galaxy Pulse +++
-\\#00FFFFLive DJ Tonight
-\\#FFFFFFVIP Lounge Upstairs`
+`#ff00ff+++ Galaxy Pulse +++
+#00ffffLive DJ Tonight
+#ffffffVIP Lounge Upstairs`
         ]
     }
 };
-
-/* ============================================================
-   SANITIZE + PREVIEW RENDERER (UPDATED REGEX)
-   ============================================================ */
 
 function sanitizeText(text) {
     text = text.replace(/[^\x20-\x7E\n]/g, '');
@@ -88,9 +80,7 @@ function renderPreview() {
 
     let html = text;
 
-    // Updated regex to support:
-    // #RRGGBB
-    // \#RRGGBB
+    // UPDATED: support both "#RRGGBB" and "\#RRGGBB"
     html = html.replace(
         /\\?#([0-9A-Fa-f]{6})(.*?)(?=\\?#([0-9A-Fa-f]{6})|$)/gs,
         (match, color, content) => {
@@ -100,10 +90,6 @@ function renderPreview() {
 
     preview.innerHTML = html.replace(/\n/g, '<br>');
 }
-
-/* ============================================================
-   INSERT HELPERS
-   ============================================================ */
 
 function insertAtCursor(field, text) {
     const start = field.selectionStart;
@@ -120,10 +106,6 @@ function insertAtCursor(field, text) {
 
     field.focus();
 }
-
-/* ============================================================
-   COLOR UTILITIES
-   ============================================================ */
 
 function hexToRgb(hex) {
     const bigint = parseInt(hex.slice(1), 16);
@@ -144,10 +126,7 @@ function rgbToHex(r, g, b) {
         .join('');
 }
 
-/* ============================================================
-   GRADIENT GENERATOR (UPDATED TO ESCAPED FORMAT)
-   ============================================================ */
-
+// UPDATED: output "\#RRGGBB" before each letter
 function generateLetterGradient(text, startHex, endHex) {
     const start = hexToRgb(startHex);
     const end = hexToRgb(endHex);
@@ -160,23 +139,20 @@ function generateLetterGradient(text, startHex, endHex) {
         const g = Math.round(start.g + (end.g - start.g) * ratio);
         const b = Math.round(start.b + (end.b - start.b) * ratio);
 
-        const hex = rgbToHex(r, g, b).toUpperCase();
+        const hex = rgbToHex(r, g, b).toUpperCase(); // "#FF00FF"
 
+        // prepend backslash so output is "\#FF00FF"
         result += `\\${hex}${text[i]}`;
     }
 
     return result;
 }
 
-/* ============================================================
-   EVENT LISTENERS
-   ============================================================ */
-
 editor.addEventListener('input', renderPreview);
 
 document.querySelectorAll('.colorBtn').forEach(btn => {
     btn.addEventListener('click', () => {
-        insertAtCursor(editor, "\\" + btn.dataset.color.toUpperCase());
+        insertAtCursor(editor, btn.dataset.color);
         renderPreview();
     });
 });
@@ -212,7 +188,7 @@ hexInput.addEventListener('input', () => {
 });
 
 insertCustomColor.addEventListener('click', () => {
-    let value = hexInput.value.toUpperCase();
+    let value = hexInput.value;
 
     if (!value.startsWith('#'))
         value = '#' + value;
@@ -222,7 +198,7 @@ insertCustomColor.addEventListener('click', () => {
         return;
     }
 
-    insertAtCursor(editor, "\\" + value);
+    insertAtCursor(editor, value);
     renderPreview();
 });
 
@@ -243,7 +219,7 @@ document.getElementById('generateLetterGradient')
 
 document.getElementById('dividerBtn')
 .addEventListener('click', () => {
-    insertAtCursor(editor, '\n\\#FFFF00====================\n');
+    insertAtCursor(editor, '\n#ffff00====================\n');
     renderPreview();
 });
 
@@ -265,7 +241,7 @@ document.getElementById('borderBtn')
     const border =
         borders[Math.floor(Math.random() * borders.length)];
 
-    insertAtCursor(editor, `\n\\#FFFF00${border}\n`);
+    insertAtCursor(editor, `\n#ffff00${border}\n`);
     renderPreview();
 });
 
@@ -276,98 +252,98 @@ document.getElementById('copyBtn')
 });
 
 /* ============================================================
-   NEW STAR WARS RANDOM GENERATOR (UPDATED TO ESCAPED COLORS)
+   NEW STAR WARS RANDOM GENERATOR
    ============================================================ */
 
 const randomThemes = [
     {
         name: "Imperial",
         templates: [
-`\\#FF0000=== Imperial Notice ===
-\\#CC0000Authorized Personnel Only
-\\#880000Report Suspicious Activity`,
+`#ff0000=== Imperial Notice ===
+#cc0000Authorized Personnel Only
+#880000Report Suspicious Activity`,
 
-`\\#FF0000+++ EMPIRE NETWORK +++
-\\#FFFFFFSector Patrol Active
-\\#AA0000Glory to the Empire`
+`#ff0000+++ EMPIRE NETWORK +++
+#ffffffSector Patrol Active
+#aa0000Glory to the Empire`
         ]
     },
 
     {
         name: "Rebel Alliance",
         templates: [
-`\\#00CCFF=== Alliance Outpost ===
-\\#FFFFFFEncrypted Channel Active
-\\#00FFFFHope Lives`,
+`#00ccff=== Alliance Outpost ===
+#ffffffEncrypted Channel Active
+#00ffffHope Lives`,
 
-`\\#00CCFF>>> REBEL NETWORK <<<
-\\#FFFFFFSupply Drop Incoming
-\\#00FFFFStand Together`
+`#00ccff>>> REBEL NETWORK <<<
+#ffffffSupply Drop Incoming
+#00ffffStand Together`
         ]
     },
 
     {
         name: "Hutt Cartel",
         templates: [
-`\\#66FF00Jabba's Exchange
-\\#FFFF00Spice & Rare Goods
-\\#00FF00No Questions Asked`,
+`#66ff00Jabba's Exchange
+#ffff00Spice & Rare Goods
+#00ff00No Questions Asked`,
 
-`\\#99FF00Hutt Territory
-\\#FFFF00Pay Your Tribute
-\\#55AA00Trespassers Vanish`
+`#99ff00Hutt Territory
+#ffff00Pay Your Tribute
+#55aa00Trespassers Vanish`
         ]
     },
 
     {
         name: "Mandalorian",
         templates: [
-`\\#FFAA00>>> Mandalorian Forge <<<
-\\#FFFFFFThis Is The Way
-\\#FFAA00Clan Honor Above All`,
+`#ffaa00>>> Mandalorian Forge <<<
+#ffffffThis Is The Way
+#ffaa00Clan Honor Above All`,
 
-`\\#FFAA00=== Mandalorian Outpost ===
-\\#FFFFFFBeskar Trade Authorized
-\\#FFAA00No Droids Allowed`
+`#ffaa00=== Mandalorian Outpost ===
+#ffffffBeskar Trade Authorized
+#ffaa00No Droids Allowed`
         ]
     },
 
     {
         name: "Sith",
         templates: [
-`\\#FF0000+++ SITH SANCTUM +++
-\\#AA0000Power Through Passion
-\\#550000Fear Is Freedom`,
+`#ff0000+++ SITH SANCTUM +++
+#aa0000Power Through Passion
+#550000Fear Is Freedom`,
 
-`\\#FF0000=== DARK SIDE ARCHIVE ===
-\\#AA0000Knowledge Is Power
-\\#550000Obey the Sith`
+`#ff0000=== DARK SIDE ARCHIVE ===
+#aa0000Knowledge Is Power
+#550000Obey the Sith`
         ]
     },
 
     {
         name: "Jedi",
         templates: [
-`\\#00FFFF=== JEDI ENCLAVE ===
-\\#FFFFFFPeace Through Knowledge
-\\#00CCFFThe Force Guides Us`,
+`#00ffff=== JEDI ENCLAVE ===
+#ffffffPeace Through Knowledge
+#00ccffThe Force Guides Us`,
 
-`\\#00FFFF>>> JEDI ARCHIVE <<<
-\\#FFFFFFMeditation Chamber Active
-\\#00CCFFBalance Above All`
+`#00ffff>>> JEDI ARCHIVE <<<
+#ffffffMeditation Chamber Active
+#00ccffBalance Above All`
         ]
     },
 
     {
         name: "Cantina",
         templates: [
-`\\#FF00FF+++ Mos Eisley Cantina +++
-\\#00FFFFLive Music Tonight
-\\#FFFFFFNo Blasters`,
+`#ff00ff+++ Mos Eisley Cantina +++
+#00ffffLive Music Tonight
+#ffffffNo Blasters`,
 
-`\\#FF00FF=== OUTER RIM CANTINA ===
-\\#00FFFFDrinks & Sabacc
-\\#FFFFFFSmugglers Welcome`
+`#ff00ff=== OUTER RIM CANTINA ===
+#00ffffDrinks & Sabacc
+#ffffffSmugglers Welcome`
         ]
     }
 ];
